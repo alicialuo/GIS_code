@@ -1,0 +1,38 @@
+---
+title: "inequality"
+author: "alicia"
+date: "11/16/2021"
+output: html_document
+---
+
+```{r setup, eval=FALSE}
+#snapshot
+#renv::snapshot
+
+#install the same package
+#renv::restore()
+```
+
+## R Markdown
+10min
+data folder:
+#load package
+```{r}
+library(tidyverse)
+library(sf)
+library(here)
+library(janitor)
+library(countrycode)
+```
+
+#load data
+
+```{r}
+HDI <- read.csv(here::here("data","Gender Inequality Index (GII).csv"),
+                      locale = locale(encoding='latin1'),
+                      na = "..",skip = 5)
+world <- st_read(here::here("Data","World_countries_Generalized_.shp"))
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
