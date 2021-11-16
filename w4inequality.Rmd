@@ -14,8 +14,9 @@ output: html_document
 ```
 
 ## R Markdown
-10min
-data folder:
+data 
+https://hub.arcgis.com/datasets/esri::world-countries-generalized/about
+http://hdr.undp.org/en/indicators/68606#
 #load package
 ```{r}
 library(tidyverse)
@@ -28,11 +29,28 @@ library(countrycode)
 #load data
 
 ```{r}
-HDI <- read.csv(here::here("data","Gender Inequality Index (GII).csv"),
-                      locale = locale(encoding='latin1'),
+HDI <- read_csv(here::here("data","Gender Inequality Index (GII).csv"),
+                      locale = locale(encoding="latin1"),
                       na = "..",skip = 5)
-world <- st_read(here::here("Data","World_countries_Generalized_.shp"))
+World <- st_read(here::here("data","World_Countries__Generalized_.shp"))
 
 ```
+#column names
+select colunms we want and change the country name to code, using 'countrycode'
+```{r}
+HDIcols <- HDI %>%
+  clean_names()%>%
+  select(country,x2019,x2010)%>%
+  mutate(difference=x2019-x2010)%>%
+  slice(1:189,)%>%
+  mutate(iso_code=countrycode(HDIcols$country,origin = 'country.name',destination = 'iso2c'))
+```
+##join
+```{r}
+Join_HDI <- World %>%
+  clean_names()%>%
+  left_join(.,
+            HDIcols,
+            by = c("aff_iso"="iso_code"))
+```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
